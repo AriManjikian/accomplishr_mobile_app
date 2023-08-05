@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "239633891989",
+    "firebase_url": "https://accomplishr-78ffd-default-rtdb.firebaseio.com",
+    "project_id": "accomplishr-78ffd",
+    "storage_bucket": "accomplishr-78ffd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:239633891989:android:ab27060dd8e61bdfc7d19c",
+        "android_client_info": {
+          "package_name": "com.example.accomplishr_mobile_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "239633891989-4c9a11f413oea2skah8jkqgmdfhs9djm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeRW3qlFWEWMJc8_-WIw41KnvaK4-a1M4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "239633891989-4c9a11f413oea2skah8jkqgmdfhs9djm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "239633891989-cb7fdbko030e39kdotlgcenv441sefpg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.accomplishrApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
