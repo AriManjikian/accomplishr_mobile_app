@@ -1,5 +1,6 @@
 import 'package:accomplishr_mobile_app/firebase_options.dart';
 import 'package:accomplishr_mobile_app/providers/user_provider.dart';
+import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:accomplishr_mobile_app/screens/email_verification_screen.dart';
 import 'package:accomplishr_mobile_app/screens/responsive_screen.dart';
 import 'package:accomplishr_mobile_app/screens/welcome_screen.dart';
@@ -36,7 +37,7 @@ void checkDate() async {
           .doc(_auth.currentUser!.uid)
           .collection('Dates')
           .doc(DateTime.now().format('yMMMd'))
-          .set({"dateAdded": DateTime.now().format('yMMMd')});
+          .set({"dateAdded": DateTime.now()});
       QuerySnapshot habits = await FirebaseFirestore.instance
           .collection('Users')
           .doc(_auth.currentUser!.uid)
@@ -61,7 +62,7 @@ void checkDate() async {
         .doc(_auth.currentUser!.uid)
         .collection('Dates')
         .doc(DateTime.now().format('yMMMd'))
-        .set({"dateAdded": DateTime.now().format('yMMMd')});
+        .set({"dateAdded": DateTime.now()});
   }
 }
 
@@ -93,7 +94,7 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
                 if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                  checkDate();
+                  FirestoreMethods().checkDate();
                   return const ResponsiveScreen();
                 }
                 return const VerifyEmailPage();

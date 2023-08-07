@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:accomplishr_mobile_app/screens/add_habit_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,6 +25,18 @@ class _HabitsScreenState extends State<HabitsScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<String> docsfunction() async {
+    final today = DateTime.now();
+    final sevendaysago = today.subtract(const Duration(days: 7));
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_auth.currentUser!.uid)
+        .collection('Dates')
+        .where('dateAdded', isGreaterThanOrEqualTo: sevendaysago)
+        .get();
+    return 'ari';
   }
 
   @override

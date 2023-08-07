@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 import '../models/habit.dart';
@@ -45,6 +46,80 @@ class FirestoreMethods {
     return res;
   }
 
+  Future<String> updateHabit(
+    String habitName,
+    String habitId,
+    String habitDescription,
+    int count,
+    int goal,
+    bool isCompleted,
+  ) async {
+    String res = "Some error occurred";
+    try {
+      _firestore
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Habits')
+          .doc(habitId)
+          .update({
+        "habitName": habitName,
+        "habitDescription": habitDescription,
+        "count": count,
+        "goal": goal,
+        "isCompleted": isCompleted,
+      });
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
+
+  void checkDate() async {
+    QuerySnapshot date = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(_auth.currentUser!.uid)
+        .collection('Dates')
+        .orderBy('dateAdded')
+        .limitToLast(1)
+        .get();
+    if (date.docs.isNotEmpty) {
+      if (date.docs[0]['dateAdded'] != DateTime.now().format('yMMMd')) {
+        FirebaseFirestore.instance
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .collection('Dates')
+            .doc(DateTime.now().format('yMMMd'))
+            .set({"dateAdded": DateTime.now().format('yMMMd'), "count": 0});
+        QuerySnapshot habits = await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .collection('Habits')
+            .get();
+        for (var i = 0; i < habits.docs.length; i++) {
+          final String habitId = habits.docs[i].get('habitId');
+          FirebaseFirestore.instance
+              .collection("Users")
+              .doc(_auth.currentUser!.uid)
+              .collection('Habits')
+              .doc(habitId)
+              .update({
+            "count": 0,
+            "isCompleted": false,
+          });
+        }
+      }
+    } else {
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Dates')
+          .doc(DateTime.now().format('yMMMd'))
+          .set({"dateAdded": DateTime.now().format('yMMMd'), "count": 0});
+    }
+  }
+
   Future<String> addOneToCount(String habitId, int habitCount) async {
     habitCount = habitCount + 1;
     String res = "Some error occurred";
@@ -55,6 +130,48 @@ class FirestoreMethods {
           .collection('Habits')
           .doc(habitId)
           .update({'count': habitCount});
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
+
+  Future<String> habitsCompleted() async {
+    String res = "Some error occurred";
+    try {
+      QuerySnapshot completedHabits = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Habits')
+          .where('isCompleted', isEqualTo: true)
+          .get();
+
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Dates')
+          .doc(DateTime.now().format('yMMMd'))
+          .update({'count': completedHabits.docs.length});
+
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
+
+  Future<String> DeleteHabit(String habitId) async {
+    String res = "Some error occurred";
+    try {
+      _firestore
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Habits')
+          .doc(habitId)
+          .delete();
       res = 'success';
     } catch (err) {
       res = err.toString();
