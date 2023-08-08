@@ -24,9 +24,16 @@ class HabitDetailsScreen extends StatelessWidget {
 
   Stream<String> controllerListener(TextEditingController controller) async* {
     while (true) {
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
       yield controller.value.text;
     }
+  }
+
+  void updateSnap() {
+    snap['habitName'] = _habitNameController.value.text;
+    snap['habitDescription'] = _habitDescriptionController.value.text;
+    snap['count'] = _countController.value;
+    snap['goal'] = _countController.value;
   }
 
   @override
@@ -66,15 +73,10 @@ class HabitDetailsScreen extends StatelessWidget {
                           int.tryParse(_countController.value.text)!,
                           int.tryParse(_goalController.value.text)!,
                           isCompleted);
-                      snap['habitName'] = _habitNameController.value.text;
-                      snap['habitDescription'] =
-                          _habitDescriptionController.value.text;
-                      snap['count'] = _countController.value;
-                      snap['goal'] = _countController.value;
+                      updateSnap();
                     } else {
                       showSnackBar('Please Update The Habit', context);
                     }
-
                     FirestoreMethods().habitsCompleted();
                   },
                   child: Text(
@@ -109,7 +111,7 @@ class HabitDetailsScreen extends StatelessWidget {
                       ),
                       TextField(
                         cursorColor: Colors.black,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
@@ -117,14 +119,14 @@ class HabitDetailsScreen extends StatelessWidget {
                             focusedBorder: inputBorder,
                             enabledBorder: inputBorder,
                             contentPadding: const EdgeInsets.all(5),
-                            constraints: BoxConstraints(maxWidth: 250)),
+                            constraints: const BoxConstraints(maxWidth: 250)),
                         controller: _habitNameController,
                       ),
                     ],
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               StreamBuilder(
@@ -135,7 +137,7 @@ class HabitDetailsScreen extends StatelessWidget {
                     builder: (context, snapshot) {
                       return Container(
                         width: double.infinity,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             color: whiteColor,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(32))),
@@ -158,8 +160,10 @@ class HabitDetailsScreen extends StatelessWidget {
                                         ? 1
                                         : int.parse(_countController.text) /
                                             int.parse((_goalController.text)),
-                            progressColor: Color.fromARGB(255, 87, 209, 91),
-                            backgroundColor: Color.fromARGB(255, 191, 191, 191),
+                            progressColor:
+                                const Color.fromARGB(255, 87, 209, 91),
+                            backgroundColor:
+                                const Color.fromARGB(255, 191, 191, 191),
                             center: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -200,12 +204,12 @@ class HabitDetailsScreen extends StatelessWidget {
                       }
                     },
                     fillColor: Colors.black,
-                    child: Icon(
+                    padding: const EdgeInsets.all(8.0),
+                    shape: const CircleBorder(),
+                    child: const Icon(
                       Icons.exposure_minus_1_outlined,
                       size: 25.0,
                     ),
-                    padding: EdgeInsets.all(8.0),
-                    shape: CircleBorder(),
                   ),
                   RawMaterialButton(
                     onPressed: () {
@@ -213,12 +217,12 @@ class HabitDetailsScreen extends StatelessWidget {
                           (int.tryParse(_countController.text)! + 1).toString();
                     },
                     fillColor: Colors.black,
-                    child: Icon(
+                    padding: const EdgeInsets.all(8.0),
+                    shape: const CircleBorder(),
+                    child: const Icon(
                       Icons.plus_one,
                       size: 25.0,
                     ),
-                    padding: EdgeInsets.all(8.0),
-                    shape: CircleBorder(),
                   ),
                 ],
               )
@@ -261,10 +265,11 @@ class HabitDetailsScreen extends StatelessWidget {
                       IconsButton(
                         onPressed: () async {
                           String res = await FirestoreMethods()
-                              .DeleteHabit(snap['habitId']);
+                              .deleteHabit(snap['habitId']);
                           if (res != "success") {
                             showSnackBar(res, context);
                           } else {
+                            FirestoreMethods().habitsCompleted();
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst);
                           }
@@ -278,12 +283,12 @@ class HabitDetailsScreen extends StatelessWidget {
                       ),
                     ]);
               },
-              child: Icon(Icons.delete, semanticLabel: 'Delete'),
-              style: ButtonStyle(
+              style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(
                   Colors.transparent,
                 ),
               ),
+              child: const Icon(Icons.delete, semanticLabel: 'Delete'),
             ),
             Text(
               'Delete Habit',

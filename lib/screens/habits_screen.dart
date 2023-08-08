@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:accomplishr_mobile_app/screens/add_habit_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_date/dart_date.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,24 +16,13 @@ class HabitsScreen extends StatefulWidget {
 
 class _HabitsScreenState extends State<HabitsScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   int completedCount = 0;
   int habitCount = 0;
 
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<String> docsfunction() async {
-    final today = DateTime.now();
-    final sevendaysago = today.subtract(const Duration(days: 7));
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('Users')
-        .doc(_auth.currentUser!.uid)
-        .collection('Dates')
-        .where('dateAdded', isGreaterThanOrEqualTo: sevendaysago)
-        .get();
-    return 'ari';
   }
 
   @override
@@ -118,7 +104,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 StreamBuilder(
-                  stream: FirebaseFirestore.instance
+                  stream: _firestore
                       .collection('Users')
                       .doc(_auth.currentUser!.uid)
                       .collection('Habits')
@@ -134,7 +120,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                     }
                     completedCount = snapshot.data!.docs.length.toInt();
                     return StreamBuilder(
-                      stream: FirebaseFirestore.instance
+                      stream: _firestore
                           .collection('Users')
                           .doc(_auth.currentUser!.uid)
                           .collection('Habits')
@@ -183,11 +169,11 @@ class _HabitsScreenState extends State<HabitsScreen> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
+                  stream: _firestore
                       .collection('Users')
                       .doc(_auth.currentUser!.uid)
                       .collection('Habits')
-                      .orderBy('dateAdded', descending: true)
+                      .orderBy('dateAdded')
                       .snapshots(),
                   builder: (context,
                       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>

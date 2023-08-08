@@ -77,29 +77,35 @@ class FirestoreMethods {
   }
 
   void checkDate() async {
-    QuerySnapshot date = await FirebaseFirestore.instance
+    QuerySnapshot date = await _firestore
         .collection('Users')
         .doc(_auth.currentUser!.uid)
         .collection('Dates')
-        .orderBy('dateAdded')
+        .orderBy('date')
         .limitToLast(1)
         .get();
     if (date.docs.isNotEmpty) {
       if (date.docs[0]['dateAdded'] != DateTime.now().format('yMMMd')) {
-        FirebaseFirestore.instance
+        print(date.docs[0]['dateAdded']);
+        print(DateTime.now().format('yMMMd'));
+        _firestore
             .collection('Users')
             .doc(_auth.currentUser!.uid)
             .collection('Dates')
             .doc(DateTime.now().format('yMMMd'))
-            .set({"dateAdded": DateTime.now().format('yMMMd'), "count": 0});
-        QuerySnapshot habits = await FirebaseFirestore.instance
+            .set({
+          "dateAdded": DateTime.now().format('yMMMd'),
+          "count": 0,
+          "date": DateTime.now()
+        });
+        QuerySnapshot habits = await _firestore
             .collection('Users')
             .doc(_auth.currentUser!.uid)
             .collection('Habits')
             .get();
         for (var i = 0; i < habits.docs.length; i++) {
           final String habitId = habits.docs[i].get('habitId');
-          FirebaseFirestore.instance
+          _firestore
               .collection("Users")
               .doc(_auth.currentUser!.uid)
               .collection('Habits')
@@ -111,12 +117,16 @@ class FirestoreMethods {
         }
       }
     } else {
-      FirebaseFirestore.instance
+      _firestore
           .collection('Users')
           .doc(_auth.currentUser!.uid)
           .collection('Dates')
           .doc(DateTime.now().format('yMMMd'))
-          .set({"dateAdded": DateTime.now().format('yMMMd'), "count": 0});
+          .set({
+        "dateAdded": DateTime.now().format('yMMMd'),
+        "count": 0,
+        "date": DateTime.now()
+      });
     }
   }
 
@@ -141,14 +151,14 @@ class FirestoreMethods {
   Future<String> habitsCompleted() async {
     String res = "Some error occurred";
     try {
-      QuerySnapshot completedHabits = await FirebaseFirestore.instance
+      QuerySnapshot completedHabits = await _firestore
           .collection('Users')
           .doc(_auth.currentUser!.uid)
           .collection('Habits')
           .where('isCompleted', isEqualTo: true)
           .get();
 
-      FirebaseFirestore.instance
+      _firestore
           .collection('Users')
           .doc(_auth.currentUser!.uid)
           .collection('Dates')
@@ -163,7 +173,7 @@ class FirestoreMethods {
     return res;
   }
 
-  Future<String> DeleteHabit(String habitId) async {
+  Future<String> deleteHabit(String habitId) async {
     String res = "Some error occurred";
     try {
       _firestore

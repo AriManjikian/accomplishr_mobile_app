@@ -19,11 +19,11 @@ class VerifyEmailPageState extends State<VerifyEmailPage> {
   bool isEmailVerified = false;
   Timer? timer;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   void initState() {
     super.initState();
-
-    isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    isEmailVerified = _auth.currentUser!.emailVerified;
 
     if (!isEmailVerified) {
       sendVerificationEmail();
@@ -36,10 +36,10 @@ class VerifyEmailPageState extends State<VerifyEmailPage> {
   }
 
   Future checkEmailVerified() async {
-    await FirebaseAuth.instance.currentUser?.reload();
+    await _auth.currentUser?.reload();
 
     setState(() {
-      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+      isEmailVerified = _auth.currentUser!.emailVerified;
     });
 
     if (isEmailVerified) {
@@ -56,7 +56,7 @@ class VerifyEmailPageState extends State<VerifyEmailPage> {
 
   Future sendVerificationEmail() async {
     try {
-      final user = FirebaseAuth.instance.currentUser!;
+      final user = _auth.currentUser!;
       await user.sendEmailVerification();
     } catch (err) {
       showSnackBar(err.toString(), context);
@@ -111,7 +111,7 @@ class VerifyEmailPageState extends State<VerifyEmailPage> {
                               Padding(
                                 padding: const EdgeInsets.all(45.0),
                                 child: Text(
-                                  'We have sent an email verification link to \n ${FirebaseAuth.instance.currentUser!.email}',
+                                  'We have sent an email verification link to \n ${_auth.currentUser!.email}',
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.poppins(
                                       color: whiteColor,
