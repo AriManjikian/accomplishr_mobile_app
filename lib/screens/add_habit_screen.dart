@@ -14,14 +14,11 @@ class AddHabitScreen extends StatefulWidget {
 class _AddHabitScreenState extends State<AddHabitScreen> {
   final TextEditingController _habitNameController = TextEditingController();
   final TextEditingController _habitGoalController = TextEditingController();
-  final TextEditingController _habitDescriptionController =
-      TextEditingController();
   final FirestoreMethods _firestoreMethods = FirestoreMethods();
 
   @override
   void dispose() {
     super.dispose();
-    _habitDescriptionController.dispose();
     _habitGoalController.dispose();
     _habitNameController.dispose();
   }
@@ -29,12 +26,8 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   Future<String> uploadHabit() async {
     String res = "some error occured";
     try {
-      _firestoreMethods.uploadHabit(
-          _habitNameController.text,
-          _habitDescriptionController.text,
-          0,
-          int.parse(_habitGoalController.text),
-          false);
+      _firestoreMethods.uploadHabit(_habitNameController.text, 0,
+          int.parse(_habitGoalController.text), false);
       res = "success";
       Navigator.of(context).pop(MaterialPageRoute(
         builder: (context) {
@@ -58,10 +51,6 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
           InputField(
               hintText: 'Habit Name',
               textEditingController: _habitNameController,
-              textInputType: TextInputType.text),
-          InputField(
-              hintText: 'Habit description',
-              textEditingController: _habitDescriptionController,
               textInputType: TextInputType.text),
           InputField(
               hintText: 'Habit goal',

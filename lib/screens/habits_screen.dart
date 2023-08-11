@@ -1,4 +1,5 @@
 import 'package:accomplishr_mobile_app/screens/add_habit_screen.dart';
+import 'package:accomplishr_mobile_app/widgets/appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,72 +29,8 @@ class _HabitsScreenState extends State<HabitsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 50,
-        backgroundColor: Colors.black,
-        flexibleSpace: ClipRRect(
-          borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(60),
-              bottomRight: Radius.circular(60)),
-          child: Padding(
-            padding: const EdgeInsets.all(26),
-            child: Stack(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Your Habits',
-                            style: GoogleFonts.workSans(
-                                color: whiteColor,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          Text(
-                            'Become disciplined',
-                            style: GoogleFonts.workSans(
-                                color: whiteColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 30),
-                      child: Container(
-                        width: 80,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/checkmark.png'),
-                            fit: BoxFit.scaleDown,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(110),
-          child: Container(),
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(60),
-            bottomRight: Radius.circular(60),
-          ),
-        ),
-      ),
+      appBar: myAppBar('Your Habits', 'Become Disciplined',
+          const AssetImage('assets/checkmark.png')),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(

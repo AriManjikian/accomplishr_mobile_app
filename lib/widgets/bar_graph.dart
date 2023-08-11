@@ -6,51 +6,94 @@ import 'package:flutter/material.dart';
 class BarGraphWidget extends StatelessWidget {
   final int maxHabitCount;
   final List dataList;
-  const BarGraphWidget(
-      {super.key, required this.maxHabitCount, required this.dataList});
+  final List bottomList;
+  const BarGraphWidget({
+    super.key,
+    required this.maxHabitCount,
+    required this.dataList,
+    required this.bottomList,
+  });
 
   @override
   Widget build(BuildContext context) {
     BarData myBarData = BarData(
-        firstValue: dataList[0],
-        secondValue: dataList[1],
-        thirdValue: dataList[2],
-        fourthValue: dataList[3],
-        fifthValue: dataList[4],
-        sixthValue: dataList[5],
-        seventhValue: dataList[6]);
+      firstValue: dataList[0],
+      secondValue: dataList[1],
+      thirdValue: dataList[2],
+      fourthValue: dataList[3],
+      fifthValue: dataList[4],
+      sixthValue: dataList[5],
+      seventhValue: dataList[6],
+    );
     myBarData.initializeBarData();
-    return SizedBox(
-      height: 150,
-      child: BarChart(BarChartData(
-          gridData: FlGridData(show: false),
-          borderData: FlBorderData(show: false),
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          ),
-          maxY: maxHabitCount.toDouble() + 5,
-          minY: 0,
-          barGroups: myBarData.barData
-              .map(
-                (data) => BarChartGroupData(
-                  x: data.x,
-                  barRods: [
-                    BarChartRodData(
-                        toY: data.y.toDouble(),
-                        color: greenColor,
-                        width: 20,
-                        borderRadius: BorderRadius.circular(5),
-                        backDrawRodData: BackgroundBarChartRodData(
-                            color: grayColor,
-                            show: true,
-                            toY: maxHabitCount.toDouble() + 5)),
-                  ],
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(5)),
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.black,
+            border: Border.all(color: Colors.white60),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
+        child: SizedBox(
+          height: 220,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: BarChart(BarChartData(
+                gridData: const FlGridData(show: false),
+                borderData: FlBorderData(show: false),
+                titlesData: FlTitlesData(
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: bottomTitles,
+                      reservedSize: 42,
+                    ),
+                  ),
                 ),
-              )
-              .toList())),
+                maxY: maxHabitCount.toDouble(),
+                minY: 0,
+                barGroups: myBarData.barData
+                    .map(
+                      (data) => BarChartGroupData(
+                        x: data.x,
+                        barRods: [
+                          BarChartRodData(
+                            toY: data.y.toDouble(),
+                            color: greenColor,
+                            width: 20,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList())),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget bottomTitles(double value, TitleMeta meta) {
+    final titles = bottomList;
+
+    final Widget text = Text(
+      titles[value.toInt()],
+      style: const TextStyle(
+        color: Color(0xff7589a2),
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
+    );
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 16,
+      child: text,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:accomplishr_mobile_app/screens/settings_screen.dart';
 import 'package:accomplishr_mobile_app/utils/colors.dart';
 import 'package:accomplishr_mobile_app/widgets/bar_graph.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,18 +25,49 @@ class _HomeScreenState extends State<HomeScreen> {
     getUsername();
   }
 
+  List getBottomList() {
+    List bottomList = [];
+    switch (DateTime.now().format('EEEE')) {
+      case "Monday":
+        bottomList = ["Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon"];
+        break;
+      case "Tuesday":
+        bottomList = ["Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue"];
+        break;
+      case "Wednesday":
+        bottomList = ["Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed"];
+        break;
+      case "Thursday":
+        bottomList = ["Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu"];
+        break;
+      case "Friday":
+        bottomList = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+        break;
+      case "Saturday":
+        bottomList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        break;
+      case "Sunday":
+        bottomList = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        break;
+      default:
+        ["_", "_", "_", "_", "_", "_", "_"];
+    }
+    return bottomList;
+  }
+
   List weekValuesListener(
       AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+    List valuesList = [];
     try {
-      List valuesList = [];
-
       int j = 0;
       for (var i = 6; i >= 0; i--) {
         String subtractedDate =
             DateTime.now().subtract(Duration(days: i)).format('yMMMd');
         if (snapshot.data?.docs[j]['dateAdded'].toString() == subtractedDate) {
           valuesList.add(snapshot.data?.docs[j]['count']);
-          maxCount = snapshot.data?.docs[j]['count'];
+          if (maxCount < snapshot.data?.docs[j]['count']) {
+            maxCount = snapshot.data?.docs[j]['count'];
+          }
 
           j++;
         } else {
@@ -86,13 +118,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   decoration: const BoxDecoration(color: Colors.black87),
                 ),
-                Text(
-                  'Hello, $username',
-                  style: GoogleFonts.workSans(
-                    color: whiteColor,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w800,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Hello, $username',
+                      style: GoogleFonts.workSans(
+                        color: whiteColor,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        child: const Icon(Icons.settings),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) {
+                              return const SettingsScreen();
+                            },
+                          ));
+                        },
+                      ),
+                    )
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
@@ -125,17 +175,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Center(
             child: Column(
           children: [
-            // valuesList.length <= 0
-            //     ? BarGraphWidget(maxHabitCount: 10, dataList: [
-            //         0,
-            //         0,
-            //         0,
-            //         0,
-            //         0,
-            //         0,
-            //         0,
-            //       ])
-            //     : BarGraphWidget(maxHabitCount: 10, dataList: valuesList)
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('Users')
@@ -153,12 +192,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   .snapshots(),
               builder: (context, snapshot) {
                 List graphList = weekValuesListener(snapshot);
+                List bottomList = getBottomList();
                 return Column(
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: BarGraphWidget(
-                          maxHabitCount: maxCount, dataList: graphList),
+                        bottomList: bottomList,
+                        maxHabitCount: maxCount,
+                        dataList: graphList,
+                      ),
                     ),
                   ],
                 );

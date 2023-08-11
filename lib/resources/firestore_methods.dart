@@ -10,7 +10,6 @@ class FirestoreMethods {
 
   Future<String> uploadHabit(
     String habitName,
-    String habitDescription,
     int count,
     int goal,
     bool isCompleted,
@@ -23,7 +22,6 @@ class FirestoreMethods {
       Habit habit = Habit(
         habitId: habitId,
         habitName: habitName,
-        habitDescription: habitDescription,
         count: count,
         goal: goal,
         isCompleted: isCompleted,
@@ -49,7 +47,6 @@ class FirestoreMethods {
   Future<String> updateHabit(
     String habitName,
     String habitId,
-    String habitDescription,
     int count,
     int goal,
     bool isCompleted,
@@ -63,7 +60,6 @@ class FirestoreMethods {
           .doc(habitId)
           .update({
         "habitName": habitName,
-        "habitDescription": habitDescription,
         "count": count,
         "goal": goal,
         "isCompleted": isCompleted,
@@ -86,8 +82,6 @@ class FirestoreMethods {
         .get();
     if (date.docs.isNotEmpty) {
       if (date.docs[0]['dateAdded'] != DateTime.now().format('yMMMd')) {
-        print(date.docs[0]['dateAdded']);
-        print(DateTime.now().format('yMMMd'));
         _firestore
             .collection('Users')
             .doc(_auth.currentUser!.uid)
@@ -130,21 +124,43 @@ class FirestoreMethods {
     }
   }
 
-  Future<String> addOneToCount(String habitId, int habitCount) async {
-    habitCount = habitCount + 1;
+  Future<String> addHabitIdToDate(String habitId) async {
     String res = "Some error occurred";
+    String todaysDate = DateTime.now().format('yMMMd');
     try {
       _firestore
-          .collection('Users')
+          .collection("Users")
           .doc(_auth.currentUser!.uid)
-          .collection('Habits')
-          .doc(habitId)
-          .update({'count': habitCount});
-      res = 'success';
+          .collection('Dates')
+          .doc(todaysDate)
+          .update({
+        habitId: true,
+      });
+
+      res = "success";
     } catch (err) {
       res = err.toString();
     }
+    return res;
+  }
 
+  Future<String> removeHabitIdFromDate(String habitId) async {
+    String res = "Some error occurred";
+    String todaysDate = DateTime.now().format('yMMMd');
+    try {
+      _firestore
+          .collection("Users")
+          .doc(_auth.currentUser!.uid)
+          .collection('Dates')
+          .doc(todaysDate)
+          .update({
+        habitId: false,
+      });
+
+      res = "success";
+    } catch (err) {
+      res = err.toString();
+    }
     return res;
   }
 
@@ -173,15 +189,49 @@ class FirestoreMethods {
     return res;
   }
 
-  Future<String> deleteHabit(String habitId) async {
+  Future<String> deleteHabit(String habitId, Timestamp dateAdded) async {
     String res = "Some error occurred";
     try {
+      QuerySnapshot dateSnaps = await _firestore
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Dates')
+          .where('date',
+              isGreaterThanOrEqualTo:
+                  dateAdded.toDate().subtract(const Duration(days: 1)))
+          .get();
+      if (dateSnaps.docs.isNotEmpty) {
+        for (var i = 0; i < dateSnaps.docs.length; i++) {
+          String result = "some error occurred";
+          try {
+            // ignore: unused_local_variable
+            bool habitIdString = dateSnaps.docs[i][habitId];
+            result = "success";
+          } catch (e) {
+            result = e.toString();
+          }
+
+          if (result == "success") {
+            _firestore
+                .collection('Users')
+                .doc(_auth.currentUser!.uid)
+                .collection('Dates')
+                .doc(dateSnaps.docs[i].id)
+                .update({
+              "count": dateSnaps.docs[i]["count"] - 1,
+              habitId: false,
+            });
+          }
+        }
+      }
+
       _firestore
           .collection('Users')
           .doc(_auth.currentUser!.uid)
           .collection('Habits')
           .doc(habitId)
           .delete();
+
       res = 'success';
     } catch (err) {
       res = err.toString();

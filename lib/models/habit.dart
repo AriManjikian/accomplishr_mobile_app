@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Habit {
   final String habitId;
   final String habitName;
-  final String habitDescription;
   final int count;
   final int goal;
   final bool isCompleted;
@@ -12,7 +11,6 @@ class Habit {
   const Habit({
     required this.habitId,
     required this.habitName,
-    required this.habitDescription,
     required this.count,
     required this.goal,
     required this.isCompleted,
@@ -24,7 +22,6 @@ class Habit {
         "habitName": habitName,
         "count": count,
         "goal": goal,
-        "habitDescription": habitDescription,
         "dateAdded": dateAdded,
         "isCompleted": isCompleted,
       };
@@ -35,7 +32,6 @@ class Habit {
     return Habit(
       habitId: snapshot['habitId'],
       habitName: snapshot['habitName'],
-      habitDescription: snapshot['habitDescription'],
       count: snapshot['count'],
       goal: snapshot['goal'],
       isCompleted: snapshot['isCompleted'],

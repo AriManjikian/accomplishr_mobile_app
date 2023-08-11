@@ -15,9 +15,6 @@ class HabitDetailsScreen extends StatelessWidget {
 
   final TextEditingController _habitNameController = TextEditingController();
 
-  final TextEditingController _habitDescriptionController =
-      TextEditingController();
-
   final TextEditingController _countController = TextEditingController();
 
   final TextEditingController _goalController = TextEditingController();
@@ -31,7 +28,6 @@ class HabitDetailsScreen extends StatelessWidget {
 
   void updateSnap() {
     snap['habitName'] = _habitNameController.value.text;
-    snap['habitDescription'] = _habitDescriptionController.value.text;
     snap['count'] = _countController.value;
     snap['goal'] = _countController.value;
   }
@@ -43,7 +39,6 @@ class HabitDetailsScreen extends StatelessWidget {
             width: 2, color: Colors.black45, style: BorderStyle.solid),
         borderRadius: BorderRadius.circular(10));
     _habitNameController.text = snap['habitName'];
-    _habitDescriptionController.text = snap['habitDescription'];
     _countController.text = snap['count'].toString();
     _goalController.text = snap['goal'].toString();
     return Scaffold(
@@ -56,20 +51,23 @@ class HabitDetailsScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
+                    //check if the habit is completed with snap
                     bool isCompleted =
                         int.tryParse(_countController.value.text)! >=
                             int.tryParse(_goalController.value.text)!;
-
+                    //if it is completed then add the habitId to today's date completedId list
+                    if (isCompleted) {
+                      FirestoreMethods().addHabitIdToDate(snap["habitId"]);
+                    } else {
+                      FirestoreMethods().removeHabitIdFromDate(snap["habitId"]);
+                    }
                     if (_habitNameController.value.text != snap['habitName'] ||
-                        _habitDescriptionController.value.text !=
-                            snap['habitDescription'] ||
                         _goalController.value.text != snap['goal'].toString() ||
                         _countController.value.text !=
                             snap['count'].toString()) {
                       FirestoreMethods().updateHabit(
                           _habitNameController.value.text,
                           snap['habitId'],
-                          _habitDescriptionController.value.text,
                           int.tryParse(_countController.value.text)!,
                           int.tryParse(_goalController.value.text)!,
                           isCompleted);
@@ -77,6 +75,7 @@ class HabitDetailsScreen extends StatelessWidget {
                     } else {
                       showSnackBar('Please Update The Habit', context);
                     }
+                    //if i can not use count field in date and instead use List i can take this out
                     FirestoreMethods().habitsCompleted();
                   },
                   child: Text(
@@ -265,11 +264,10 @@ class HabitDetailsScreen extends StatelessWidget {
                       IconsButton(
                         onPressed: () async {
                           String res = await FirestoreMethods()
-                              .deleteHabit(snap['habitId']);
+                              .deleteHabit(snap['habitId'], snap['dateAdded']);
                           if (res != "success") {
                             showSnackBar(res, context);
                           } else {
-                            FirestoreMethods().habitsCompleted();
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst);
                           }
