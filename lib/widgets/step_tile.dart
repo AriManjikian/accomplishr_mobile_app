@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, use_build_context_synchronously
+
 import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,7 +35,6 @@ class _StepTileState extends State<StepTile> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -173,7 +174,6 @@ class _StepTileState extends State<StepTile> {
                                           ),
                                         ),
                                         onPressed: () async {
-                                          //TODO add check for step name, do same thing for goal and habit, and username
                                           if (_stepEditController.value.text !=
                                               widget.snap['stepName']) {
                                             String res =

@@ -262,7 +262,6 @@ class _AddGoalScreenState extends State<AddGoalScreen> {
                                                       ),
                                                     ),
                                                     onPressed: () {
-                                                      //TODO add check for step name, do same thing for goal and habit, and username
                                                       stepsList.add(
                                                           _stepNameController
                                                               .value.text);

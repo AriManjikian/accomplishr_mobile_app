@@ -121,7 +121,6 @@ class _HabitsScreenState extends State<HabitsScreen> {
                       );
                     }
 
-                    //TODO add empty Habits widget
                     if (snapshot.data!.docs.isEmpty) {
                       return Center(
                         child: Text(

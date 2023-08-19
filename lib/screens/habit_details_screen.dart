@@ -100,7 +100,9 @@ class HabitDetailsScreen extends StatelessWidget {
                                         } else {
                                           isCompleted = false;
                                         }
-                                      } catch (e) {}
+                                      } catch (e) {
+                                        //
+                                      }
 
                                       String res = await FirestoreMethods()
                                           .updateHabit(
@@ -110,7 +112,6 @@ class HabitDetailsScreen extends StatelessWidget {
                                               goal,
                                               isCompleted,
                                               isImportant);
-                                      print(res);
                                       if (res == "success") {
                                         updateSnap();
                                       }

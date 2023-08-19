@@ -231,7 +231,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         return const SizedBox();
                       }
 
-                      //TODO add empty Habits widget
                       if (snapshot.data!.docs.isEmpty) {
                         return const SizedBox();
                       }
@@ -275,7 +274,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         return const SizedBox();
                       }
 
-                      //TODO add empty Habits widget
                       if (snapshot.data!.docs.isEmpty) {
                         return const SizedBox();
                       }

@@ -198,7 +198,6 @@ class FirestoreMethods {
           .get();
       if (dateSnaps.docs.isNotEmpty) {
         for (var i = 0; i < dateSnaps.docs.length; i++) {
-          String result = "some error occurred";
           try {
             bool habitIdExists = dateSnaps.docs[i].get(habitId);
             if (habitIdExists == true) {
@@ -212,9 +211,8 @@ class FirestoreMethods {
                 habitId: false,
               });
             }
-            result = "success";
           } catch (e) {
-            result = e.toString();
+            //
           }
         }
       }
@@ -532,5 +530,5 @@ class FirestoreMethods {
 
     return res;
   }
-  //TODO edit step, edit username, change password, important habit, important goal, text format, progressbar goal
+  //TODO edit username, change password, text format
 }
