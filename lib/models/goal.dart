@@ -5,19 +5,22 @@ class Goal {
   final String goalName;
   final dynamic dateAdded;
   final bool isCompleted;
+  final bool isImportant;
 
   const Goal({
     required this.goalId,
     required this.goalName,
     required this.dateAdded,
     required this.isCompleted,
+    required this.isImportant,
   });
 
   Map<String, dynamic> toJson() => {
         "goalId": goalId,
-        "GoalName": goalName,
+        "goalName": goalName,
         "dateAdded": dateAdded,
         "isCompleted": isCompleted,
+        "isImportant": isImportant,
       };
 
   static Goal fromSnap(DocumentSnapshot snap) {
@@ -28,6 +31,7 @@ class Goal {
       goalName: snapshot['goalName'],
       isCompleted: snapshot['isCompleted'],
       dateAdded: snapshot['dateAdded'],
+      isImportant: snapshot['isImportant'],
     );
   }
 }

@@ -13,9 +13,9 @@ class HabitTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-            color: grayColor,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            color: snap["count"] >= snap["goal"] ? greenColor : grayColor,
           ),
           child: Padding(
             padding: const EdgeInsets.all(18.0),
@@ -41,17 +41,20 @@ class HabitTile extends StatelessWidget {
                     )
                   ],
                 ),
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  child: LinearProgressIndicator(
-                    backgroundColor: Colors.grey.shade600,
-                    value: snap['count'] / snap['goal'] > 1
-                        ? 1
-                        : snap['count'] / snap['goal'],
-                    color: greenColor,
-                    minHeight: 15,
-                  ),
-                )
+                snap["count"] >= snap["goal"]
+                    ? Container()
+                    : ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5)),
+                        child: LinearProgressIndicator(
+                          backgroundColor: Colors.grey.shade600,
+                          value: snap['count'] / snap['goal'] > 1
+                              ? 1
+                              : snap['count'] / snap['goal'],
+                          color: greenColor,
+                          minHeight: 15,
+                        ),
+                      )
               ],
             ),
           ),

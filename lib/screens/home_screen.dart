@@ -7,6 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../widgets/goal_tile.dart';
+import '../widgets/habit_tile.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -15,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   String username = '';
   int maxCount = 0;
 
@@ -24,6 +26,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     getUsername();
   }
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List getBottomList() {
     List bottomList = [];
@@ -170,45 +175,136 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-            child: Column(
-          children: [
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('Users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection('Dates')
-                  .where('date',
-                      isGreaterThanOrEqualTo: DateTime.now().subtract(Duration(
-                          days: 7,
-                          hours: DateTime.now().getHours,
-                          minutes: DateTime.now().getMinutes,
-                          seconds: DateTime.now().getSeconds,
-                          milliseconds: DateTime.now().getMilliseconds,
-                          microseconds: DateTime.now().getMicroseconds)))
-                  .orderBy('date')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                List graphList = weekValuesListener(snapshot);
-                List bottomList = getBottomList();
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: BarGraphWidget(
-                        bottomList: bottomList,
-                        maxHabitCount: maxCount,
-                        dataList: graphList,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(_auth.currentUser!.uid)
+                    .collection('Dates')
+                    .where('date',
+                        isGreaterThanOrEqualTo: DateTime.now().subtract(
+                            Duration(
+                                days: 7,
+                                hours: DateTime.now().getHours,
+                                minutes: DateTime.now().getMinutes,
+                                seconds: DateTime.now().getSeconds,
+                                milliseconds: DateTime.now().getMilliseconds,
+                                microseconds: DateTime.now().getMicroseconds)))
+                    .orderBy('date')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  List graphList = weekValuesListener(snapshot);
+                  List bottomList = getBottomList();
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+                        child: BarGraphWidget(
+                          bottomList: bottomList,
+                          maxHabitCount: maxCount,
+                          dataList: graphList,
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            )
-          ],
-        )),
+                    ],
+                  );
+                },
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: StreamBuilder(
+                    stream: _firestore
+                        .collection('Users')
+                        .doc(_auth.currentUser!.uid)
+                        .collection('Habits')
+                        .where('isImportant', isEqualTo: true)
+                        .snapshots(),
+                    builder: (context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox();
+                      }
+
+                      //TODO add empty Habits widget
+                      if (snapshot.data!.docs.isEmpty) {
+                        return const SizedBox();
+                      }
+                      return Column(
+                        children: [
+                          Text(
+                            'Important Habits',
+                            style: GoogleFonts.workSans(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return HabitTile(
+                                  snap: snapshot.data!.docs[index].data(),
+                                );
+                              }),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: StreamBuilder(
+                    stream: _firestore
+                        .collection('Users')
+                        .doc(_auth.currentUser!.uid)
+                        .collection('Goals')
+                        .where('isImportant', isEqualTo: true)
+                        .snapshots(),
+                    builder: (context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const SizedBox();
+                      }
+
+                      //TODO add empty Habits widget
+                      if (snapshot.data!.docs.isEmpty) {
+                        return const SizedBox();
+                      }
+                      return Column(
+                        children: [
+                          Text(
+                            'Important Goals',
+                            style: GoogleFonts.workSans(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
+                          ),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return GoalTile(
+                                  snap: snapshot.data!.docs[index].data(),
+                                );
+                              }),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

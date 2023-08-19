@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:accomplishr_mobile_app/utils/colors.dart';
 import 'package:accomplishr_mobile_app/utils/utils.dart';
@@ -9,6 +11,7 @@ import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+// ignore: must_be_immutable
 class HabitDetailsScreen extends StatelessWidget {
   final dynamic snap;
   HabitDetailsScreen({super.key, required this.snap});
@@ -19,6 +22,9 @@ class HabitDetailsScreen extends StatelessWidget {
 
   final TextEditingController _goalController = TextEditingController();
 
+  bool isImportant = false;
+  bool isCompleted = false;
+
   Stream<String> controllerListener(TextEditingController controller) async* {
     while (true) {
       await Future.delayed(const Duration(milliseconds: 100));
@@ -26,14 +32,24 @@ class HabitDetailsScreen extends StatelessWidget {
     }
   }
 
+  Stream<bool?> importantListener(bool? isImportant) async* {
+    while (true) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      yield isImportant;
+    }
+  }
+
   void updateSnap() {
-    snap['habitName'] = _habitNameController.value.text;
-    snap['count'] = _countController.value;
-    snap['goal'] = _countController.value;
+    snap['habitName'] = _habitNameController.value.text.toString();
+    snap['count'] = int.tryParse(_countController.value.text);
+    snap['goal'] = int.tryParse(_goalController.value.text);
+    snap['isCompleted'] = isCompleted;
+    snap['isImportant'] = isImportant;
   }
 
   @override
   Widget build(BuildContext context) {
+    isImportant = snap['isImportant'];
     final inputBorder = OutlineInputBorder(
         borderSide: const BorderSide(
             width: 2, color: Colors.black45, style: BorderStyle.solid),
@@ -49,42 +65,72 @@ class HabitDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
             child: Row(
               children: [
-                InkWell(
-                  onTap: () {
-                    //check if the habit is completed with snap
-                    bool isCompleted =
-                        int.tryParse(_countController.value.text)! >=
-                            int.tryParse(_goalController.value.text)!;
-                    //if it is completed then add the habitId to today's date completedId list
-                    if (isCompleted) {
-                      FirestoreMethods().addHabitIdToDate(snap["habitId"]);
-                    } else {
-                      FirestoreMethods().removeHabitIdFromDate(snap["habitId"]);
-                    }
-                    if (_habitNameController.value.text != snap['habitName'] ||
-                        _goalController.value.text != snap['goal'].toString() ||
-                        _countController.value.text !=
-                            snap['count'].toString()) {
-                      FirestoreMethods().updateHabit(
-                          _habitNameController.value.text,
-                          snap['habitId'],
-                          int.tryParse(_countController.value.text)!,
-                          int.tryParse(_goalController.value.text)!,
-                          isCompleted);
-                      updateSnap();
-                    } else {
-                      showSnackBar('Please Update The Habit', context);
-                    }
-                    //if i can not use count field in date and instead use List i can take this out
-                    FirestoreMethods().habitsCompleted();
+                StreamBuilder(
+                  stream: controllerListener(_countController),
+                  builder: (context, snapshot) {
+                    return StreamBuilder(
+                      stream: controllerListener(_goalController),
+                      builder: (context, snapshot) {
+                        return StreamBuilder(
+                          stream: controllerListener(_habitNameController),
+                          builder: (context, snapshot) {
+                            return StreamBuilder(
+                              stream: importantListener(isImportant),
+                              builder: (context, snapshot) {
+                                if (_countController.value.text ==
+                                        snap['count'].toString() &&
+                                    _goalController.value.text ==
+                                        snap['goal'].toString() &&
+                                    _habitNameController.value.text ==
+                                        snap['habitName'] &&
+                                    isImportant == snap['isImportant']) {
+                                  return Container();
+                                } else {
+                                  return InkWell(
+                                    onTap: () async {
+                                      int count = 0;
+                                      int goal = 0;
+                                      try {
+                                        count = int.parse(
+                                            _countController.value.text);
+                                        goal = int.parse(
+                                            _goalController.value.text);
+                                        if (count >= goal) {
+                                          isCompleted = true;
+                                        } else {
+                                          isCompleted = false;
+                                        }
+                                      } catch (e) {}
+
+                                      String res = await FirestoreMethods()
+                                          .updateHabit(
+                                              _habitNameController.value.text,
+                                              snap['habitId'],
+                                              count,
+                                              goal,
+                                              isCompleted,
+                                              isImportant);
+                                      print(res);
+                                      if (res == "success") {
+                                        updateSnap();
+                                      }
+                                    },
+                                    child: Text(
+                                      'save',
+                                      style: GoogleFonts.poppins(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: grayColor),
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
                   },
-                  child: Text(
-                    'save',
-                    style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: grayColor),
-                  ),
                 ),
               ],
             ),
@@ -122,7 +168,25 @@ class HabitDetailsScreen extends StatelessWidget {
                         controller: _habitNameController,
                       ),
                     ],
-                  )
+                  ),
+                  StreamBuilder(
+                      stream: importantListener(isImportant),
+                      builder: (context, goalSnap) {
+                        return Transform.scale(
+                          scale: 1.5,
+                          child: InkWell(
+                            child: Icon(
+                              Icons.star,
+                              color: isImportant == false
+                                  ? Colors.black
+                                  : Colors.yellow,
+                            ),
+                            onTap: () {
+                              isImportant = !isImportant;
+                            },
+                          ),
+                        );
+                      }),
                 ],
               ),
               const SizedBox(

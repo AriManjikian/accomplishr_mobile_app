@@ -41,8 +41,8 @@ dependencies:
   fl_chart: ^0.63.0
   flutter:
     sdk: flutter
+  flutter_slidable: ^3.0.0
   google_fonts: ^5.1.0
-  lottie: ^2.5.0
   material_dialogs: ^1.1.4
   percent_indicator: ^4.2.3
   provider: ^6.0.5

@@ -6,6 +6,7 @@ class Habit {
   final int count;
   final int goal;
   final bool isCompleted;
+  final bool isImportant;
   final dynamic dateAdded;
 
   const Habit({
@@ -14,6 +15,7 @@ class Habit {
     required this.count,
     required this.goal,
     required this.isCompleted,
+    required this.isImportant,
     required this.dateAdded,
   });
 
@@ -24,18 +26,19 @@ class Habit {
         "goal": goal,
         "dateAdded": dateAdded,
         "isCompleted": isCompleted,
+        "isImportant": isImportant
       };
 
   static Habit fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
 
     return Habit(
-      habitId: snapshot['habitId'],
-      habitName: snapshot['habitName'],
-      count: snapshot['count'],
-      goal: snapshot['goal'],
-      isCompleted: snapshot['isCompleted'],
-      dateAdded: snapshot['dateAdded'],
-    );
+        habitId: snapshot['habitId'],
+        habitName: snapshot['habitName'],
+        count: snapshot['count'],
+        goal: snapshot['goal'],
+        isCompleted: snapshot['isCompleted'],
+        dateAdded: snapshot['dateAdded'],
+        isImportant: snap['isImportant']);
   }
 }
