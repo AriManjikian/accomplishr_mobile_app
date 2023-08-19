@@ -22,8 +22,8 @@ class _GoalsScreenState extends State<GoalsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(
-          'Your Goals', 'One step at a time', const AssetImage('assets/trophy.png')),
+      appBar: myAppBar('Your Goals', 'One step at a time',
+          const AssetImage('assets/trophy.png')),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(
@@ -114,7 +114,6 @@ class _GoalsScreenState extends State<GoalsScreen> {
                       );
                     }
 
-                    //TODO add empty Habits widget
                     if (snapshot.data!.docs.isEmpty) {
                       return Center(
                         child: Text(

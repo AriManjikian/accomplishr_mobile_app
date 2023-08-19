@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:accomplishr_mobile_app/utils/colors.dart';
 import 'package:accomplishr_mobile_app/widgets/step_tile.dart';
@@ -412,7 +414,6 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                                                             ),
                                                             onPressed:
                                                                 () async {
-                                                              //TODO add check for step name, do same thing for goal and habit, and username
                                                               String res = await FirestoreMethods()
                                                                   .addStepToGoal(
                                                                       widget
@@ -476,7 +477,6 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                               );
                             }
 
-                            //TODO add empty Habits widget
                             if (snapshot.data!.docs.isEmpty) {
                               return Center(
                                 child: Text(
