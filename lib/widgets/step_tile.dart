@@ -77,7 +77,7 @@ class _StepTileState extends State<StepTile> {
                                         borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(20),
                                             topRight: Radius.circular(20)),
-                                        color: Colors.orange),
+                                        color: Colors.black),
                                   ),
                                 ),
                                 Text(
@@ -209,7 +209,7 @@ class _StepTileState extends State<StepTile> {
                       fontWeight: FontWeight.w800,
                       fontSize: 18),
                   msg: 'Are you sure? You can\'t undo this',
-                  title: "Delete Goal",
+                  title: "Delete Step",
                   color: Colors.white,
                   context: context,
                   actions: [
@@ -252,9 +252,8 @@ class _StepTileState extends State<StepTile> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            color: widget.snap['isCompleted'] == true
-                ? const Color.fromARGB(255, 248, 182, 96)
-                : grayColor,
+            color:
+                widget.snap['isCompleted'] == true ? greenColor : Colors.black,
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -268,7 +267,9 @@ class _StepTileState extends State<StepTile> {
                         Text(
                           'Step ${widget.index + 1}:',
                           style: GoogleFonts.poppins(
-                            color: Colors.black,
+                            color: widget.snap['isCompleted'] == true
+                                ? Colors.black
+                                : offWhiteColor,
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
@@ -280,7 +281,9 @@ class _StepTileState extends State<StepTile> {
                             child: Text(
                               '${widget.snap["stepName"]}',
                               style: GoogleFonts.poppins(
-                                color: Colors.black,
+                                color: widget.snap['isCompleted'] == true
+                                    ? Colors.black
+                                    : offWhiteColor,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                               ),

@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:accomplishr_mobile_app/models/goal.dart';
+import 'package:accomplishr_mobile_app/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dart_date/dart_date.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import '../models/habit.dart';
 
@@ -530,5 +534,77 @@ class FirestoreMethods {
 
     return res;
   }
-  //TODO edit username, change password, text format
+
+  //goal important toggle
+  Future<String> deleteUser() async {
+    String res = "Some error occurred";
+    try {
+      _firestore.collection('Users').doc(_auth.currentUser!.uid).delete();
+      res == "success";
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
+
+  //goal important toggle
+  Future<String> changeUsername(String username, BuildContext context) async {
+    String res = "Some error occurred";
+    try {
+      _firestore
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .update({'username': username});
+      res == "success";
+      Navigator.of(context).pop();
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
+
+  //goal important toggle
+  Future<String> clearHistory(BuildContext context) async {
+    String res = "Some error occurred";
+    try {
+      var habits = _firestore
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Habits');
+      var habitsnapshots = await habits.get();
+      for (var doc in habitsnapshots.docs) {
+        await doc.reference.delete();
+      }
+      var goals = _firestore
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Goals');
+      var goalSnapshots = await goals.get();
+      for (var doc in goalSnapshots.docs) {
+        await doc.reference.delete();
+      }
+
+      var dates = _firestore
+          .collection('Users')
+          .doc(_auth.currentUser!.uid)
+          .collection('Dates');
+      var dateSnapshots = await dates.get();
+      for (var doc in dateSnapshots.docs) {
+        await doc.reference.delete();
+      }
+      FirestoreMethods().checkDate();
+
+      res == "success";
+      Navigator.of(context).pop();
+      showSnackBar('History Cleared!', context);
+    } catch (err) {
+      res = err.toString();
+    }
+
+    return res;
+  }
+
+  //TODO text format
 }

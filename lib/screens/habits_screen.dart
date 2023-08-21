@@ -92,12 +92,12 @@ class _HabitsScreenState extends State<HabitsScreen> {
                     ));
                   },
                   style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(greenColor),
+                    backgroundColor: MaterialStatePropertyAll(Colors.black),
                   ),
                   child: Text(
                     'New Habit',
                     style: GoogleFonts.poppins(
-                        color: Colors.black, fontWeight: FontWeight.w600),
+                        color: whiteColor, fontWeight: FontWeight.w600),
                   ),
                 )
               ],

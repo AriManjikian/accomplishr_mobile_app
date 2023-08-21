@@ -16,7 +16,7 @@ class PercentInputField extends StatelessWidget {
       controller: textEditingController,
       cursorColor: Colors.black,
       style: const TextStyle(
-          color: Colors.black, fontSize: 20, fontWeight: FontWeight.w500),
+          color: Colors.black, fontSize: 24, fontWeight: FontWeight.w500),
       decoration: const InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.transparent)),

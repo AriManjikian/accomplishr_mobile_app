@@ -46,10 +46,10 @@ class _AddGoalScreenState extends State<AddGoalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final inputBorder = OutlineInputBorder(
-        borderSide: const BorderSide(
-            width: 2, color: Colors.black45, style: BorderStyle.solid),
-        borderRadius: BorderRadius.circular(10));
+    const inputBorder = UnderlineInputBorder(
+      borderSide: BorderSide(
+          width: 2, color: Colors.black, style: BorderStyle.solid),
+    );
     return StreamBuilder(
       stream: listListener(stepsList),
       builder: (context, snapshot) {
@@ -58,250 +58,256 @@ class _AddGoalScreenState extends State<AddGoalScreen> {
             backgroundColor: Colors.black,
           ),
           body: Center(
-            child: Column(
-              children: [
-                Text(
-                  'Goal name:',
-                  style: GoogleFonts.workSans(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black),
-                ),
-                TextField(
-                  cursorColor: Colors.black,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500),
-                  decoration: InputDecoration(
-                      focusedBorder: inputBorder,
-                      enabledBorder: inputBorder,
-                      contentPadding: const EdgeInsets.all(5),
-                      constraints: const BoxConstraints(maxWidth: 300)),
-                  controller: _goalNameController,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Divider(
-                    thickness: 2,
-                    color: Colors.black,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 30.0),
+              child: Column(
+                children: [
+                  Text(
+                    'Goal name',
+                    style: GoogleFonts.workSans(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
                   ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Total steps: ${stepsList.length}',
-                        style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _stepNameController.clear();
-                          showDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              builder: (BuildContext context) {
-                                return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(20.0)),
-                                    child: Container(
-                                        height: 300.0,
-                                        width: 250.0,
-                                        decoration: BoxDecoration(
-                                            color: whiteColor,
-                                            borderRadius:
-                                                BorderRadius.circular(20.0)),
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 12),
-                                              child: Container(
-                                                height: 60.0,
-                                                decoration: const BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft: Radius
-                                                                .circular(20),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    20)),
-                                                    color: Colors.orange),
-                                              ),
-                                            ),
-                                            Text(
-                                              'Add a step',
-                                              style: GoogleFonts.poppins(
-                                                  color: Colors.black,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 12.0),
-                                              child: TextField(
-                                                cursorColor: Colors.black,
-                                                style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                                decoration: InputDecoration(
-                                                    focusedBorder: inputBorder,
-                                                    enabledBorder: inputBorder,
-                                                    contentPadding:
-                                                        const EdgeInsets.all(5),
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                            maxWidth: 200)),
-                                                controller: _stepNameController,
-                                              ),
-                                            ),
-                                            Expanded(child: Container()),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 30.0,
-                                                      vertical: 25),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  ElevatedButton(
-                                                    style: const ButtonStyle(
-                                                        fixedSize:
-                                                            MaterialStatePropertyAll(
-                                                                Size.fromWidth(
-                                                                    100)),
-                                                        shape:
-                                                            MaterialStatePropertyAll(
-                                                          RoundedRectangleBorder(
-                                                            side: BorderSide(
-                                                                color:
-                                                                    Colors.red,
-                                                                width: 3),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  5),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        elevation:
-                                                            MaterialStatePropertyAll(
-                                                                0),
-                                                        backgroundColor:
-                                                            MaterialStatePropertyAll(
-                                                                whiteColor)),
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Cancel',
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 14.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Colors
-                                                                    .black),
-                                                      ),
-                                                    ),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                  ElevatedButton(
-                                                    style: const ButtonStyle(
-                                                        fixedSize:
-                                                            MaterialStatePropertyAll(
-                                                                Size.fromWidth(
-                                                                    100)),
-                                                        shape:
-                                                            MaterialStatePropertyAll(
-                                                          RoundedRectangleBorder(
-                                                            side: BorderSide(
-                                                                color: Colors
-                                                                    .green,
-                                                                width: 3),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(
-                                                              Radius.circular(
-                                                                  5),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        elevation:
-                                                            MaterialStatePropertyAll(
-                                                                0),
-                                                        backgroundColor:
-                                                            MaterialStatePropertyAll(
-                                                                whiteColor)),
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Save',
-                                                        style:
-                                                            GoogleFonts.poppins(
-                                                                fontSize: 14.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Colors
-                                                                    .black),
-                                                      ),
-                                                    ),
-                                                    onPressed: () {
-                                                      stepsList.add(
-                                                          _stepNameController
-                                                              .value.text);
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        )));
-                              });
-                        },
-                        style: const ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Colors.orange),
-                        ),
-                        child: Text(
-                          'Add Step',
+                  TextField(
+                    cursorColor: Colors.black,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500),
+                    decoration: const InputDecoration(
+                        focusedBorder: inputBorder,
+                        enabledBorder: inputBorder,
+                        contentPadding: EdgeInsets.all(5),
+                        constraints: BoxConstraints(maxWidth: 300)),
+                    controller: _goalNameController,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Total steps: ${stepsList.length}',
                           style: GoogleFonts.poppins(
-                              color: Colors.black, fontWeight: FontWeight.w600),
+                              color: Colors.black,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ListView.builder(
-                      itemCount: stepsList.length,
-                      itemBuilder: (context, index) {
-                        return StepCreateTile(
-                            name: stepsList[index], index: index);
-                      },
+                        ElevatedButton(
+                          onPressed: () {
+                            _stepNameController.clear();
+                            showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0)),
+                                      child: Container(
+                                          height: 300.0,
+                                          width: 250.0,
+                                          decoration: BoxDecoration(
+                                              color: whiteColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0)),
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 12),
+                                                child: Container(
+                                                  height: 60.0,
+                                                  decoration: const BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(20),
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      20)),
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                              Text(
+                                                'Add a step',
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.black,
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 12.0),
+                                                child: TextField(
+                                                  cursorColor: Colors.black,
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                  decoration: const InputDecoration(
+                                                      focusedBorder:
+                                                          inputBorder,
+                                                      enabledBorder:
+                                                          inputBorder,
+                                                      contentPadding:
+                                                          EdgeInsets.all(
+                                                              5),
+                                                      constraints:
+                                                          BoxConstraints(
+                                                              maxWidth: 200)),
+                                                  controller:
+                                                      _stepNameController,
+                                                ),
+                                              ),
+                                              Expanded(child: Container()),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 30.0,
+                                                        vertical: 25),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    ElevatedButton(
+                                                      style: const ButtonStyle(
+                                                          fixedSize:
+                                                              MaterialStatePropertyAll(
+                                                                  Size.fromWidth(
+                                                                      100)),
+                                                          shape:
+                                                              MaterialStatePropertyAll(
+                                                            RoundedRectangleBorder(
+                                                              side: BorderSide(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  width: 3),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    5),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          elevation:
+                                                              MaterialStatePropertyAll(
+                                                                  0),
+                                                          backgroundColor:
+                                                              MaterialStatePropertyAll(
+                                                                  whiteColor)),
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Cancel',
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontSize:
+                                                                      14.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: Colors
+                                                                      .black),
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    ElevatedButton(
+                                                      style: const ButtonStyle(
+                                                          fixedSize:
+                                                              MaterialStatePropertyAll(
+                                                                  Size.fromWidth(
+                                                                      100)),
+                                                          shape:
+                                                              MaterialStatePropertyAll(
+                                                            RoundedRectangleBorder(
+                                                              side: BorderSide(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  width: 3),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    5),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          elevation:
+                                                              MaterialStatePropertyAll(
+                                                                  0),
+                                                          backgroundColor:
+                                                              MaterialStatePropertyAll(
+                                                                  whiteColor)),
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Save',
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontSize:
+                                                                      14.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color: Colors
+                                                                      .black),
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        stepsList.add(
+                                                            _stepNameController
+                                                                .value.text);
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          )));
+                                });
+                          },
+                          style: const ButtonStyle(
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.black),
+                          ),
+                          child: Text(
+                            'Add Step',
+                            style: GoogleFonts.poppins(
+                                color: whiteColor, fontWeight: FontWeight.w600),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ListView.builder(
+                        itemCount: stepsList.length,
+                        itemBuilder: (context, index) {
+                          return StepCreateTile(
+                              name: stepsList[index], index: index);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           bottomNavigationBar: BottomAppBar(
@@ -313,13 +319,14 @@ class _AddGoalScreenState extends State<AddGoalScreen> {
                   const EdgeInsets.symmetric(horizontal: 26.0, vertical: 16),
               child: ElevatedButton(
                 style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.orange),
+                    backgroundColor:
+                        MaterialStatePropertyAll(Colors.transparent),
                     minimumSize: MaterialStatePropertyAll(
                         Size.fromWidth(double.infinity))),
                 child: Text(
                   'Save Goal',
                   style: GoogleFonts.workSans(
-                      color: Colors.black,
+                      color: whiteColor,
                       fontSize: 22,
                       fontWeight: FontWeight.w600),
                 ),

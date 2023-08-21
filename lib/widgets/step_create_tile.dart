@@ -15,7 +15,7 @@ class StepCreateTile extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(12)),
-          color: grayColor,
+          color: Colors.black,
         ),
         child: Padding(
           padding: const EdgeInsets.all(18.0),
@@ -26,7 +26,7 @@ class StepCreateTile extends StatelessWidget {
                   Text(
                     'Step ${index + 1}:',
                     style: GoogleFonts.poppins(
-                      color: Colors.black,
+                      color: offWhiteColor,
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
@@ -36,7 +36,7 @@ class StepCreateTile extends StatelessWidget {
                     child: Text(
                       name,
                       style: GoogleFonts.poppins(
-                        color: Colors.black,
+                        color: offWhiteColor,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),

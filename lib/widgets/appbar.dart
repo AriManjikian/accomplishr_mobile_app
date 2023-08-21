@@ -5,7 +5,6 @@ import '../utils/colors.dart';
 
 PreferredSizeWidget myAppBar(String header, String message, AssetImage photo) {
   return AppBar(
-    elevation: 50,
     backgroundColor: Colors.black,
     flexibleSpace: ClipRRect(
       borderRadius: const BorderRadius.only(
@@ -61,7 +60,6 @@ PreferredSizeWidget myAppBar(String header, String message, AssetImage photo) {
     ),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(60),
         bottomRight: Radius.circular(60),
       ),
     ),

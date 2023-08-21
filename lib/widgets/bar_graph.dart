@@ -41,7 +41,7 @@ class BarGraphWidget extends StatelessWidget {
               child: Text(
                 'Habits Progress',
                 style: TextStyle(
-                  color: Color(0xff7589a2),
+                  color: whiteColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),

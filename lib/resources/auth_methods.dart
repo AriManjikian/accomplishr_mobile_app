@@ -1,3 +1,4 @@
+import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:accomplishr_mobile_app/models/user.dart' as model;
@@ -60,6 +61,43 @@ class AuthMethods {
       } else {
         res = "Please Provide Valid Information";
       }
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> signOutUser() async {
+    String res = "Some error occured";
+
+    try {
+      _auth.signOut();
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> deleteUser() async {
+    String res = "Some error occured";
+
+    try {
+      await FirestoreMethods().deleteUser();
+      _auth.currentUser!.delete();
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> changePassword(String email) async {
+    String res = "Some error occured";
+
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      res = 'success';
     } catch (err) {
       res = err.toString();
     }

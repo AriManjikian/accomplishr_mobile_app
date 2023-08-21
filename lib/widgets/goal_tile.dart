@@ -39,10 +39,11 @@ class GoalTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(12)),
                         color: snap["isCompleted"] == true
-                            ? const Color.fromARGB(255, 248, 182, 96)
-                            : grayColor,
+                            ? greenColor
+                            : Colors.black,
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(22.0),
@@ -54,7 +55,9 @@ class GoalTile extends StatelessWidget {
                                 Text(
                                   '${snap["goalName"]}',
                                   style: GoogleFonts.poppins(
-                                    color: Colors.black,
+                                    color: snap['isCompleted'] == true
+                                        ? Colors.black
+                                        : offWhiteColor,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -62,7 +65,9 @@ class GoalTile extends StatelessWidget {
                                 Text(
                                   'Steps:  ${completedSnapshot.data?.docs.length}/${stepSnapshot.data?.docs.length}',
                                   style: GoogleFonts.poppins(
-                                    color: Colors.black,
+                                    color: snap['isCompleted'] == true
+                                        ? Colors.black
+                                        : offWhiteColor,
                                     fontSize: 15,
                                     fontWeight: FontWeight.w600,
                                   ),

@@ -50,10 +50,10 @@ class HabitDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     isImportant = snap['isImportant'];
-    final inputBorder = OutlineInputBorder(
-        borderSide: const BorderSide(
-            width: 2, color: Colors.black45, style: BorderStyle.solid),
-        borderRadius: BorderRadius.circular(10));
+    const inputBorder = UnderlineInputBorder(
+      borderSide:
+          BorderSide(width: 2, color: Colors.black, style: BorderStyle.solid),
+    );
     _habitNameController.text = snap['habitName'];
     _countController.text = snap['count'].toString();
     _goalController.text = snap['goal'].toString();
@@ -117,7 +117,7 @@ class HabitDetailsScreen extends StatelessWidget {
                                       }
                                     },
                                     child: Text(
-                                      'save',
+                                      'Save',
                                       style: GoogleFonts.poppins(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700,
@@ -135,7 +135,28 @@ class HabitDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: StreamBuilder(
+                stream: importantListener(isImportant),
+                builder: (context, goalSnap) {
+                  return Transform.scale(
+                    scale: 1.5,
+                    child: InkWell(
+                      child: Icon(
+                        Icons.star,
+                        color: isImportant == false
+                            ? offWhiteColor
+                            : const Color.fromARGB(255, 238, 255, 1),
+                      ),
+                      onTap: () {
+                        isImportant = !isImportant;
+                      },
+                    ),
+                  );
+                }),
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -155,39 +176,25 @@ class HabitDetailsScreen extends StatelessWidget {
                             fontSize: 20,
                             fontWeight: FontWeight.w600),
                       ),
-                      TextField(
-                        cursorColor: Colors.black,
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500),
-                        decoration: InputDecoration(
-                            focusedBorder: inputBorder,
-                            enabledBorder: inputBorder,
-                            contentPadding: const EdgeInsets.all(5),
-                            constraints: const BoxConstraints(maxWidth: 250)),
-                        controller: _habitNameController,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: TextField(
+                          cursorColor: Colors.black,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500),
+                          decoration: const InputDecoration(
+                              focusedBorder: inputBorder,
+                              enabledBorder: inputBorder,
+                              contentPadding: EdgeInsets.all(5),
+                              isDense: true,
+                              constraints: BoxConstraints(maxWidth: 250)),
+                          controller: _habitNameController,
+                        ),
                       ),
                     ],
                   ),
-                  StreamBuilder(
-                      stream: importantListener(isImportant),
-                      builder: (context, goalSnap) {
-                        return Transform.scale(
-                          scale: 1.5,
-                          child: InkWell(
-                            child: Icon(
-                              Icons.star,
-                              color: isImportant == false
-                                  ? Colors.black
-                                  : Colors.yellow,
-                            ),
-                            onTap: () {
-                              isImportant = !isImportant;
-                            },
-                          ),
-                        );
-                      }),
                 ],
               ),
               const SizedBox(
@@ -199,12 +206,8 @@ class HabitDetailsScreen extends StatelessWidget {
                   return StreamBuilder(
                     stream: controllerListener(_goalController),
                     builder: (context, snapshot) {
-                      return Container(
+                      return SizedBox(
                         width: double.infinity,
-                        decoration: const BoxDecoration(
-                            color: whiteColor,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(32))),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: CircularPercentIndicator(
@@ -226,8 +229,7 @@ class HabitDetailsScreen extends StatelessWidget {
                                             int.parse((_goalController.text)),
                             progressColor:
                                 const Color.fromARGB(255, 87, 209, 91),
-                            backgroundColor:
-                                const Color.fromARGB(255, 191, 191, 191),
+                            backgroundColor: const Color.fromARGB(255, 0, 20, 37),
                             center: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -239,7 +241,7 @@ class HabitDetailsScreen extends StatelessWidget {
                                   child: Text(
                                     '/',
                                     style: GoogleFonts.poppins(
-                                        color: Colors.black87,
+                                        color: Colors.black,
                                         fontSize: 26,
                                         fontWeight: FontWeight.w700),
                                   ),
@@ -257,36 +259,53 @@ class HabitDetailsScreen extends StatelessWidget {
                   );
                 },
               ),
+              const SizedBox(
+                height: 50,
+              ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  RawMaterialButton(
-                    onPressed: () {
-                      if (_countController.text != '0') {
-                        _countController.text =
-                            (int.tryParse(_countController.text)! - 1)
-                                .toString();
-                      }
-                    },
-                    fillColor: Colors.black,
-                    padding: const EdgeInsets.all(8.0),
-                    shape: const CircleBorder(),
-                    child: const Icon(
-                      Icons.exposure_minus_1_outlined,
-                      size: 25.0,
-                    ),
+                  SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: RawMaterialButton(
+                        onPressed: () {
+                          if (_countController.text != '0') {
+                            _countController.text =
+                                (int.tryParse(_countController.text)! - 1)
+                                    .toString();
+                          }
+                        },
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        fillColor: Colors.black,
+                        child: Text(
+                          '-',
+                          style: GoogleFonts.workSans(
+                              color: whiteColor,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w800),
+                        )),
                   ),
-                  RawMaterialButton(
-                    onPressed: () {
-                      _countController.text =
-                          (int.tryParse(_countController.text)! + 1).toString();
-                    },
-                    fillColor: Colors.black,
-                    padding: const EdgeInsets.all(8.0),
-                    shape: const CircleBorder(),
-                    child: const Icon(
-                      Icons.plus_one,
-                      size: 25.0,
-                    ),
+                  SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: RawMaterialButton(
+                        onPressed: () {
+                          _countController.text =
+                              (int.tryParse(_countController.text)! + 1)
+                                  .toString();
+                        },
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        fillColor: Colors.black,
+                        child: Text(
+                          '+',
+                          style: GoogleFonts.workSans(
+                              color: whiteColor,
+                              fontSize: 28,
+                              fontWeight: FontWeight.w800),
+                        )),
                   ),
                 ],
               )
@@ -321,7 +340,6 @@ class HabitDetailsScreen extends StatelessWidget {
                         },
                         text: 'Cancel',
                         iconData: Icons.cancel_outlined,
-                        color: grayColor,
                         textStyle: GoogleFonts.poppins(
                             color: Colors.black, fontWeight: FontWeight.w600),
                         iconColor: Colors.black,
@@ -347,16 +365,14 @@ class HabitDetailsScreen extends StatelessWidget {
                     ]);
               },
               style: const ButtonStyle(
+                padding: MaterialStatePropertyAll(EdgeInsets.only(top: 10)),
+                iconSize: MaterialStatePropertyAll(35),
                 backgroundColor: MaterialStatePropertyAll(
                   Colors.transparent,
                 ),
               ),
               child: const Icon(Icons.delete, semanticLabel: 'Delete'),
             ),
-            Text(
-              'Delete Habit',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-            )
           ],
         ),
       ),

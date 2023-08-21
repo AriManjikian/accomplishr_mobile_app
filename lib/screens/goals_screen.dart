@@ -1,3 +1,4 @@
+import 'package:accomplishr_mobile_app/utils/colors.dart';
 import 'package:accomplishr_mobile_app/widgets/appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -85,12 +86,12 @@ class _GoalsScreenState extends State<GoalsScreen> {
                     ));
                   },
                   style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.orange),
+                    backgroundColor: MaterialStatePropertyAll(Colors.black),
                   ),
                   child: Text(
                     'New Goal',
                     style: GoogleFonts.poppins(
-                        color: Colors.black, fontWeight: FontWeight.w600),
+                        color: whiteColor, fontWeight: FontWeight.w600),
                   ),
                 )
               ],

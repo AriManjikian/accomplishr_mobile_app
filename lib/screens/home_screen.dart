@@ -108,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 50,
         backgroundColor: Colors.black,
         flexibleSpace: ClipRRect(
           borderRadius: const BorderRadius.only(
@@ -121,19 +120,26 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  decoration: const BoxDecoration(color: Colors.black87),
+                  decoration: const BoxDecoration(color: Colors.transparent),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Hello, $username',
-                      style: GoogleFonts.workSans(
-                        color: whiteColor,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
+                    StreamBuilder(
+                        stream: _firestore
+                            .collection('Users')
+                            .doc(_auth.currentUser!.uid)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          return Text(
+                            'Hello, ${snapshot.data?.get('username')}',
+                            style: GoogleFonts.workSans(
+                              color: whiteColor,
+                              fontSize: 25,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          );
+                        }),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
@@ -170,8 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(70),
-            bottomRight: Radius.circular(70),
+            bottomRight: Radius.circular(60),
           ),
         ),
       ),
@@ -189,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .where('date',
                         isGreaterThanOrEqualTo: DateTime.now().subtract(
                             Duration(
-                                days: 7,
+                                days: 6,
                                 hours: DateTime.now().getHours,
                                 minutes: DateTime.now().getMinutes,
                                 seconds: DateTime.now().getSeconds,
