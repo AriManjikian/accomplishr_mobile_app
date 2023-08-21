@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:accomplishr_mobile_app/screens/responsive_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:accomplishr_mobile_app/utils/utils.dart';
@@ -44,6 +45,7 @@ class VerifyEmailPageState extends State<VerifyEmailPage> {
 
     if (isEmailVerified) {
       timer?.cancel();
+      FirestoreMethods().checkDate();
     }
   }
 

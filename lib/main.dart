@@ -5,8 +5,6 @@ import 'package:accomplishr_mobile_app/screens/email_verification_screen.dart';
 import 'package:accomplishr_mobile_app/screens/responsive_screen.dart';
 import 'package:accomplishr_mobile_app/screens/welcome_screen.dart';
 import 'package:accomplishr_mobile_app/utils/colors.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_date/dart_date.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,50 +19,6 @@ Future<void> main() async {
 }
 
 FirebaseAuth _auth = FirebaseAuth.instance;
-
-void checkDate() async {
-  QuerySnapshot date = await FirebaseFirestore.instance
-      .collection('Users')
-      .doc(_auth.currentUser!.uid)
-      .collection('Dates')
-      .orderBy('dateAdded')
-      .limitToLast(1)
-      .get();
-  if (date.docs.isNotEmpty) {
-    if (date.docs[0]['dateAdded'] != DateTime.now().format('yMMMd')) {
-      FirebaseFirestore.instance
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .collection('Dates')
-          .doc(DateTime.now().format('yMMMd'))
-          .set({"dateAdded": DateTime.now()});
-      QuerySnapshot habits = await FirebaseFirestore.instance
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .collection('Habits')
-          .get();
-      for (var i = 0; i < habits.docs.length; i++) {
-        final String habitId = habits.docs[i].get('habitId');
-        FirebaseFirestore.instance
-            .collection("Users")
-            .doc(_auth.currentUser!.uid)
-            .collection('Habits')
-            .doc(habitId)
-            .update({
-          "count": 0,
-          "isCompleted": false,
-        });
-      }
-    }
-  } else {
-    FirebaseFirestore.instance
-        .collection('Users')
-        .doc(_auth.currentUser!.uid)
-        .collection('Dates')
-        .doc(DateTime.now().format('yMMMd'))
-        .set({"dateAdded": DateTime.now()});
-  }
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

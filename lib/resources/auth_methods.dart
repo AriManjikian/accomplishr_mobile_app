@@ -1,7 +1,7 @@
-import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:accomplishr_mobile_app/models/user.dart' as model;
+import 'package:flutter/material.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -71,7 +71,7 @@ class AuthMethods {
     String res = "Some error occured";
 
     try {
-      _auth.signOut();
+      await _auth.signOut();
       res = 'success';
     } catch (err) {
       res = err.toString();
@@ -79,12 +79,12 @@ class AuthMethods {
     return res;
   }
 
-  Future<String> deleteUser() async {
+  Future<String> deleteUser(BuildContext context) async {
     String res = "Some error occured";
 
     try {
-      await FirestoreMethods().deleteUser();
       _auth.currentUser!.delete();
+      AuthMethods().signOutUser();
       res = 'success';
     } catch (err) {
       res = err.toString();

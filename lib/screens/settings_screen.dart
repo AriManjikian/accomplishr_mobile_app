@@ -99,6 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 String res = await AuthMethods().signOutUser();
                                 if (res == 'success') {
                                   Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
                                 }
                               },
                               text: 'Sign Out',
@@ -146,8 +147,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                           IconsButton(
                             onPressed: () async {
-                              String res = await AuthMethods().deleteUser();
+                              String res =
+                                  await AuthMethods().deleteUser(context);
+
                               if (res == 'success') {
+                                Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               }
                             },
