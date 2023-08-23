@@ -52,14 +52,16 @@ class GoalTile extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  '${snap["goalName"]}',
-                                  style: GoogleFonts.poppins(
-                                    color: snap['isCompleted'] == true
-                                        ? Colors.black
-                                        : offWhiteColor,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
+                                Expanded(
+                                  child: Text(
+                                    '${snap["goalName"]}',
+                                    style: GoogleFonts.poppins(
+                                      color: snap['isCompleted'] == true
+                                          ? Colors.black
+                                          : offWhiteColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                                 Text(

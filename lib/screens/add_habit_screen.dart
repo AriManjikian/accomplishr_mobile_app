@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:accomplishr_mobile_app/screens/habits_screen.dart';
 import 'package:accomplishr_mobile_app/utils/colors.dart';
@@ -25,23 +27,6 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
     super.dispose();
     _habitGoalController.dispose();
     _habitNameController.dispose();
-  }
-
-  Future<String> uploadHabit() async {
-    String res = "some error occured";
-    try {
-      _firestoreMethods.uploadHabit(_habitNameController.text, 0,
-          int.parse(_habitGoalController.text), false);
-      res = "success";
-      Navigator.of(context).pop(MaterialPageRoute(
-        builder: (context) {
-          return const HabitsScreen();
-        },
-      ));
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
   }
 
   @override
@@ -137,8 +122,21 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                               style: const ButtonStyle(
                                   backgroundColor:
                                       MaterialStatePropertyAll(greenColor)),
-                              onPressed: () {
-                                uploadHabit();
+                              onPressed: () async {
+                                String res =
+                                    await _firestoreMethods.uploadHabit(
+                                        _habitNameController.text,
+                                        0,
+                                        int.parse(_habitGoalController.text),
+                                        false,
+                                        context);
+                                if (res == 'success') {
+                                  Navigator.of(context).pop(MaterialPageRoute(
+                                    builder: (context) {
+                                      return const HabitsScreen();
+                                    },
+                                  ));
+                                }
                               },
                               child: Text(
                                 'Add Habit',

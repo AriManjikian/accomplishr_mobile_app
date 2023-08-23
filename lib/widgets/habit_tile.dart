@@ -24,14 +24,16 @@ class HabitTile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '${snap["habitName"]}',
-                      style: GoogleFonts.poppins(
-                        color: snap['isCompleted'] == true
-                            ? Colors.black
-                            : offWhiteColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                    Expanded(
+                      child: Text(
+                        '${snap["habitName"]}',
+                        style: GoogleFonts.poppins(
+                          color: snap['isCompleted'] == true
+                              ? Colors.black
+                              : offWhiteColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     Text(
@@ -51,7 +53,8 @@ class HabitTile extends StatelessWidget {
                         borderRadius:
                             const BorderRadius.all(Radius.circular(5)),
                         child: LinearProgressIndicator(
-                          backgroundColor: const Color.fromARGB(255, 41, 37, 63),
+                          backgroundColor:
+                              const Color.fromARGB(255, 41, 37, 63),
                           value: snap['count'] / snap['goal'] > 1
                               ? 1
                               : snap['count'] / snap['goal'],

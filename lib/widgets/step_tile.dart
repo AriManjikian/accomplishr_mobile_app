@@ -182,7 +182,13 @@ class _StepTileState extends State<StepTile> {
                                                         widget.snap,
                                                         _stepEditController
                                                             .value.text);
-                                            Navigator.of(context).pop();
+                                            if (res == 'success') {
+                                              Navigator.of(context).pop();
+                                            } else {
+                                              showSnackBar(
+                                                  'Please provide valid information',
+                                                  context);
+                                            }
                                           }
                                         },
                                       ),
@@ -277,7 +283,7 @@ class _StepTileState extends State<StepTile> {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: SizedBox(
-                            width: 150,
+                            width: 130,
                             child: Text(
                               '${widget.snap["stepName"]}',
                               style: GoogleFonts.poppins(
@@ -288,6 +294,7 @@ class _StepTileState extends State<StepTile> {
                                 fontWeight: FontWeight.w600,
                               ),
                               maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),

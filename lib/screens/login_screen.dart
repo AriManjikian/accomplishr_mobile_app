@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'email_verification_screen.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -161,37 +162,68 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            child: Column(
                               children: [
-                                Text(
-                                  "Don't have an account?",
-                                  style: GoogleFonts.workSans(
-                                    color: whiteColor,
-                                    fontSize: 16,
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Don't have an account?",
+                                      style: GoogleFonts.workSans(
+                                        color: whiteColor,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.of(context)
+                                            .pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SignupScreen(),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "Sign Up",
+                                          style: GoogleFonts.workSans(
+                                            color: greenColor,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(4.0),
+                                  padding: const EdgeInsets.only(top: 8.0),
                                   child: GestureDetector(
-                                    onTap: () =>
-                                        Navigator.of(context).pushReplacement(
+                                    onTap: () => Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const SignupScreen(),
+                                            const ForgotPasswordScreen(),
                                       ),
                                     ),
-                                    child: Text(
-                                      "Sign Up",
-                                      style: GoogleFonts.workSans(
-                                        color: greenColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        decoration: TextDecoration.underline,
-                                      ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Forgot Your Password?",
+                                          style: GoogleFonts.workSans(
+                                              color: greenColor,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           )

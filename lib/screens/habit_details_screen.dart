@@ -100,20 +100,23 @@ class HabitDetailsScreen extends StatelessWidget {
                                         } else {
                                           isCompleted = false;
                                         }
+                                        String res = await FirestoreMethods()
+                                            .updateHabit(
+                                                _habitNameController.value.text,
+                                                snap['habitId'],
+                                                count,
+                                                goal,
+                                                isCompleted,
+                                                isImportant);
+                                        if (res == "success") {
+                                          updateSnap();
+                                        } else {
+                                          showSnackBar(res, context);
+                                        }
                                       } catch (e) {
-                                        //
-                                      }
-
-                                      String res = await FirestoreMethods()
-                                          .updateHabit(
-                                              _habitNameController.value.text,
-                                              snap['habitId'],
-                                              count,
-                                              goal,
-                                              isCompleted,
-                                              isImportant);
-                                      if (res == "success") {
-                                        updateSnap();
+                                        showSnackBar(
+                                            'Something Went Wrong, Try Changing Your Input',
+                                            context);
                                       }
                                     },
                                     child: Text(
@@ -220,16 +223,18 @@ class HabitDetailsScreen extends StatelessWidget {
                                 ? 0
                                 : _goalController.text == ''
                                     ? 0
-                                    : int.tryParse(_countController.text)! /
-                                                int.tryParse(
-                                                    (_goalController.text))! >
+                                    : BigInt.parse(_countController.text) /
+                                                BigInt.parse(
+                                                    (_goalController.text)) >
                                             1
                                         ? 1
-                                        : int.parse(_countController.text) /
-                                            int.parse((_goalController.text)),
+                                        : BigInt.parse(_countController.text) /
+                                            BigInt.parse(
+                                                (_goalController.text)),
                             progressColor:
                                 const Color.fromARGB(255, 87, 209, 91),
-                            backgroundColor: const Color.fromARGB(255, 0, 20, 37),
+                            backgroundColor:
+                                const Color.fromARGB(255, 0, 20, 37),
                             center: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

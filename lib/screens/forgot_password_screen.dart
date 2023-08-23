@@ -1,20 +1,20 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:accomplishr_mobile_app/resources/firestore_methods.dart';
 import 'package:accomplishr_mobile_app/utils/colors.dart';
 import 'package:accomplishr_mobile_app/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ChangeUsernameScreen extends StatefulWidget {
-  const ChangeUsernameScreen({super.key});
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  State<ChangeUsernameScreen> createState() => _ChangeUsernameScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final TextEditingController _emailController = TextEditingController();
   final inputBorder = const UnderlineInputBorder(
     borderSide:
         BorderSide(width: 2, color: whiteColor, style: BorderStyle.solid),
@@ -22,14 +22,7 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
   @override
   void dispose() {
     super.dispose();
-    _usernameController.dispose();
-  }
-
-  Stream<String> controllerListener(TextEditingController controller) async* {
-    while (true) {
-      await Future.delayed(const Duration(milliseconds: 100));
-      yield controller.value.text;
-    }
+    _emailController.dispose();
   }
 
   @override
@@ -60,13 +53,14 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
                               child: Column(
                                 children: [
                                   Text(
-                                    'Enter New Username',
+                                    'Enter Your Email',
                                     style: GoogleFonts.poppins(
                                         color: whiteColor,
                                         fontSize: 20,
                                         fontWeight: FontWeight.w600),
                                   ),
                                   TextField(
+                                    keyboardType: TextInputType.emailAddress,
                                     cursorColor: whiteColor,
                                     style: const TextStyle(
                                         color: whiteColor,
@@ -79,7 +73,7 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
                                         isDense: true,
                                         constraints: const BoxConstraints(
                                             maxWidth: 250)),
-                                    controller: _usernameController,
+                                    controller: _emailController,
                                   ),
                                 ],
                               ),
@@ -88,37 +82,33 @@ class _ChangeUsernameScreenState extends State<ChangeUsernameScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 16.0),
-                          child: StreamBuilder(
-                              stream: controllerListener(_usernameController),
-                              builder: (context, snapshot) {
-                                return ElevatedButton(
-                                    style: const ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                greenColor)),
-                                    onPressed: () async {
-                                      String res = await FirestoreMethods()
-                                          .changeUsername(
-                                              _usernameController.value.text,
-                                              context);
-                                      if (res == 'success') {
-                                        showSnackBar(
-                                            'Username successfuly updated',
-                                            context);
-                                      } else {
-                                        showSnackBar(
-                                            'Please provide valid information',
-                                            context);
-                                      }
-                                    },
-                                    child: Text(
-                                      'Change Username',
-                                      style: GoogleFonts.workSans(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20),
-                                    ));
-                              }),
+                          child: ElevatedButton(
+                              style: const ButtonStyle(
+                                  backgroundColor:
+                                      MaterialStatePropertyAll(greenColor)),
+                              onPressed: () async {
+                                String res = "Some error occured";
+                                try {
+                                  await FirebaseAuth.instance
+                                      .sendPasswordResetEmail(
+                                          email: _emailController.value.text);
+                                  res == 'success';
+                                  showSnackBar(
+                                      'We have sent you an email at ${_emailController.value.text}',
+                                      context);
+                                  Navigator.of(context).pop();
+                                } catch (err) {
+                                  res = err.toString();
+                                  showSnackBar(err.toString(), context);
+                                }
+                              },
+                              child: Text(
+                                'Send Email',
+                                style: GoogleFonts.workSans(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20),
+                              )),
                         )
                       ],
                     ),

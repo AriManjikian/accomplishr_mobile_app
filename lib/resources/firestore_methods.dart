@@ -84,12 +84,8 @@ class FirestoreMethods {
   }
 
 //uploads a new habit to the database
-  Future<String> uploadHabit(
-    String habitName,
-    int count,
-    int goal,
-    bool isCompleted,
-  ) async {
+  Future<String> uploadHabit(String habitName, int count, int goal,
+      bool isCompleted, BuildContext context) async {
     String res = "Some error occurred";
     try {
       String habitId = const Uuid().v1();
@@ -103,16 +99,20 @@ class FirestoreMethods {
           isCompleted: isCompleted,
           dateAdded: dateTime,
           isImportant: false);
-
-      _firestore
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .collection('Habits')
-          .doc(habitId)
-          .set(
-            habit.toJson(),
-          );
-      res = 'success';
+      if (habitName != '') {
+        _firestore
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .collection('Habits')
+            .doc(habitId)
+            .set(
+              habit.toJson(),
+            );
+        res = 'success';
+      } else {
+        res == 'Please provide valid information';
+        showSnackBar(res, context);
+      }
     } catch (err) {
       res = err.toString();
     }
@@ -131,41 +131,43 @@ class FirestoreMethods {
   ) async {
     String res = "Some error occurred";
     try {
-      _firestore
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .collection('Habits')
-          .doc(habitId)
-          .update({
-        "habitName": habitName,
-        "count": count,
-        "goal": goal,
-        "isCompleted": isCompleted,
-        "isImportant": isImportant,
-      });
+      if (habitName != '') {
+        _firestore
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .collection('Habits')
+            .doc(habitId)
+            .update({
+          "habitName": habitName,
+          "count": count,
+          "goal": goal,
+          "isCompleted": isCompleted,
+          "isImportant": isImportant,
+        });
 
-      if (isCompleted == true) {
-        String todaysDate = DateTime.now().format('yMMMd');
-        _firestore
-            .collection("Users")
-            .doc(_auth.currentUser!.uid)
-            .collection('Dates')
-            .doc(todaysDate)
-            .update({
-          habitId: true,
-        });
-      } else {
-        String todaysDate = DateTime.now().format('yMMMd');
-        _firestore
-            .collection("Users")
-            .doc(_auth.currentUser!.uid)
-            .collection('Dates')
-            .doc(todaysDate)
-            .update({
-          habitId: false,
-        });
+        if (isCompleted == true) {
+          String todaysDate = DateTime.now().format('yMMMd');
+          _firestore
+              .collection("Users")
+              .doc(_auth.currentUser!.uid)
+              .collection('Dates')
+              .doc(todaysDate)
+              .update({
+            habitId: true,
+          });
+        } else {
+          String todaysDate = DateTime.now().format('yMMMd');
+          _firestore
+              .collection("Users")
+              .doc(_auth.currentUser!.uid)
+              .collection('Dates')
+              .doc(todaysDate)
+              .update({
+            habitId: false,
+          });
+        }
+        res = 'success';
       }
-      res = 'success';
     } catch (err) {
       res = err.toString();
     }
@@ -252,29 +254,31 @@ class FirestoreMethods {
           isCompleted: false,
           dateAdded: dateTime,
           isImportant: false);
-      await _firestore
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .collection('Goals')
-          .doc(goalId)
-          .set(goal.toJson());
-      for (var i = 0; i < stepsList.length; i++) {
-        String stepId = const Uuid().v4();
+      if (goalName != '') {
         await _firestore
             .collection('Users')
             .doc(_auth.currentUser!.uid)
             .collection('Goals')
             .doc(goalId)
-            .collection('Steps')
-            .doc(stepId)
-            .set({
-          "goalId": goalId,
-          "stepName": stepsList[i],
-          "stepId": stepId,
-          "index": i,
-          "isCompleted": false,
-        });
-        res = "success";
+            .set(goal.toJson());
+        for (var i = 0; i < stepsList.length; i++) {
+          String stepId = const Uuid().v4();
+          await _firestore
+              .collection('Users')
+              .doc(_auth.currentUser!.uid)
+              .collection('Goals')
+              .doc(goalId)
+              .collection('Steps')
+              .doc(stepId)
+              .set({
+            "goalId": goalId,
+            "stepName": stepsList[i],
+            "stepId": stepId,
+            "index": i,
+            "isCompleted": false,
+          });
+          res = "success";
+        }
       }
     } catch (err) {
       res = err.toString();
@@ -288,16 +292,18 @@ class FirestoreMethods {
       dynamic snap, String goalName, bool isImportant) async {
     String res = "Some error occured";
     try {
-      await _firestore
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .collection('Goals')
-          .doc(snap['goalId'])
-          .update({
-        'goalName': goalName,
-        'isImportant': isImportant,
-      });
-      res = "success";
+      if (goalName != '') {
+        await _firestore
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .collection('Goals')
+            .doc(snap['goalId'])
+            .update({
+          'goalName': goalName,
+          'isImportant': isImportant,
+        });
+        res = "success";
+      }
     } catch (err) {
       res = err.toString();
     }
@@ -314,21 +320,23 @@ class FirestoreMethods {
     String res = "Some error occured";
     String stepId = const Uuid().v4();
     try {
-      await _firestore
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .collection('Goals')
-          .doc(snap['goalId'])
-          .collection('Steps')
-          .doc(stepId)
-          .set({
-        "stepName": stepName,
-        "stepId": stepId,
-        "index": index,
-        "goalId": snap['goalId'],
-        "isCompleted": false,
-      });
-      res = "success";
+      if (stepName != '') {
+        await _firestore
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .collection('Goals')
+            .doc(snap['goalId'])
+            .collection('Steps')
+            .doc(stepId)
+            .set({
+          "stepName": stepName,
+          "stepId": stepId,
+          "index": index,
+          "goalId": snap['goalId'],
+          "isCompleted": false,
+        });
+        res = "success";
+      }
     } catch (err) {
       res = err.toString();
     }
@@ -500,15 +508,17 @@ class FirestoreMethods {
   Future<String> editStepName(dynamic snap, String stepName) async {
     String res = "Some error occurred";
     try {
-      _firestore
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .collection('Goals')
-          .doc(snap['goalId'])
-          .collection('Steps')
-          .doc(snap['stepId'])
-          .update({'stepName': stepName});
-      res == "success";
+      if (stepName != '') {
+        _firestore
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .collection('Goals')
+            .doc(snap['goalId'])
+            .collection('Steps')
+            .doc(snap['stepId'])
+            .update({'stepName': stepName});
+        res == "success";
+      }
     } catch (err) {
       res = err.toString();
     }
@@ -552,12 +562,14 @@ class FirestoreMethods {
   Future<String> changeUsername(String username, BuildContext context) async {
     String res = "Some error occurred";
     try {
-      _firestore
-          .collection('Users')
-          .doc(_auth.currentUser!.uid)
-          .update({'username': username});
-      res == "success";
-      Navigator.of(context).pop();
+      if (username != '') {
+        _firestore
+            .collection('Users')
+            .doc(_auth.currentUser!.uid)
+            .update({'username': username});
+        res == "success";
+        Navigator.of(context).pop();
+      }
     } catch (err) {
       res = err.toString();
     }
@@ -605,6 +617,4 @@ class FirestoreMethods {
 
     return res;
   }
-
-  //TODO text format
 }

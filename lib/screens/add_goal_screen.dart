@@ -47,8 +47,8 @@ class _AddGoalScreenState extends State<AddGoalScreen> {
   @override
   Widget build(BuildContext context) {
     const inputBorder = UnderlineInputBorder(
-      borderSide: BorderSide(
-          width: 2, color: Colors.black, style: BorderStyle.solid),
+      borderSide:
+          BorderSide(width: 2, color: Colors.black, style: BorderStyle.solid),
     );
     return StreamBuilder(
       stream: listListener(stepsList),
@@ -153,17 +153,18 @@ class _AddGoalScreenState extends State<AddGoalScreen> {
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.w500),
-                                                  decoration: const InputDecoration(
-                                                      focusedBorder:
-                                                          inputBorder,
-                                                      enabledBorder:
-                                                          inputBorder,
-                                                      contentPadding:
-                                                          EdgeInsets.all(
-                                                              5),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                              maxWidth: 200)),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                          focusedBorder:
+                                                              inputBorder,
+                                                          enabledBorder:
+                                                              inputBorder,
+                                                          contentPadding:
+                                                              EdgeInsets.all(5),
+                                                          constraints:
+                                                              BoxConstraints(
+                                                                  maxWidth:
+                                                                      200)),
                                                   controller:
                                                       _stepNameController,
                                                 ),
@@ -267,11 +268,19 @@ class _AddGoalScreenState extends State<AddGoalScreen> {
                                                         ),
                                                       ),
                                                       onPressed: () {
-                                                        stepsList.add(
-                                                            _stepNameController
-                                                                .value.text);
-                                                        Navigator.of(context)
-                                                            .pop();
+                                                        if (_stepNameController
+                                                                .value.text !=
+                                                            '') {
+                                                          stepsList.add(
+                                                              _stepNameController
+                                                                  .value.text);
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        } else {
+                                                          showSnackBar(
+                                                              'Please provide valid information',
+                                                              context);
+                                                        }
                                                       },
                                                     ),
                                                   ],

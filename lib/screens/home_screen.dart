@@ -131,12 +131,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             .doc(_auth.currentUser!.uid)
                             .snapshots(),
                         builder: (context, snapshot) {
-                          return Text(
-                            'Hello, ${snapshot.data?.get('username')}',
-                            style: GoogleFonts.workSans(
-                              color: whiteColor,
-                              fontSize: 25,
-                              fontWeight: FontWeight.w800,
+                          return SizedBox(
+                            width: 300,
+                            child: Text(
+                              'Hello, ${snapshot.data?.get('username')}',
+                              style: GoogleFonts.workSans(
+                                color: whiteColor,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w800,
+                              ),
+                              maxLines: 3,
                             ),
                           );
                         }),

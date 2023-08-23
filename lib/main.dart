@@ -18,8 +18,6 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-FirebaseAuth _auth = FirebaseAuth.instance;
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

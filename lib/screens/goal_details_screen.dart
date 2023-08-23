@@ -61,8 +61,8 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final FirebaseAuth auth = FirebaseAuth.instance;
     const inputBorder = UnderlineInputBorder(
-      borderSide: BorderSide(
-          width: 2, color: Colors.black, style: BorderStyle.solid),
+      borderSide:
+          BorderSide(width: 2, color: Colors.black, style: BorderStyle.solid),
     );
     _goalNameController.text = widget.snap['goalName'];
     isImportant = widget.snap['isImportant'];
@@ -104,6 +104,8 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                                             isImportant);
                                     if (res == "success") {
                                       updateSnap();
+                                    } else {
+                                      showSnackBar(res, context);
                                     }
                                   },
                                   child: Text(
@@ -173,8 +175,7 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                                   focusedBorder: inputBorder,
                                   enabledBorder: inputBorder,
                                   contentPadding: EdgeInsets.all(5),
-                                  constraints:
-                                      BoxConstraints(maxWidth: 250)),
+                                  constraints: BoxConstraints(maxWidth: 250)),
                               controller: _goalNameController,
                             ),
                           ],
@@ -305,17 +306,19 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                                                         fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.w500),
-                                                    decoration: const InputDecoration(
-                                                        focusedBorder:
-                                                            inputBorder,
-                                                        enabledBorder:
-                                                            inputBorder,
-                                                        contentPadding:
-                                                            EdgeInsets
-                                                                .all(5),
-                                                        constraints:
-                                                            BoxConstraints(
-                                                                maxWidth: 200)),
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            focusedBorder:
+                                                                inputBorder,
+                                                            enabledBorder:
+                                                                inputBorder,
+                                                            contentPadding:
+                                                                EdgeInsets.all(
+                                                                    5),
+                                                            constraints:
+                                                                BoxConstraints(
+                                                                    maxWidth:
+                                                                        200)),
                                                     controller:
                                                         _stepNameController,
                                                   ),
@@ -438,6 +441,10 @@ class _GoalDetailsScreenState extends State<GoalDetailsScreen> {
                                                                   Navigator.of(
                                                                           context)
                                                                       .pop();
+                                                                } else {
+                                                                  showSnackBar(
+                                                                      'Please provide valid information',
+                                                                      context);
                                                                 }
                                                               },
                                                             );

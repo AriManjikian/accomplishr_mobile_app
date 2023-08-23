@@ -33,12 +33,15 @@ class StepCreateTile extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      name,
-                      style: GoogleFonts.poppins(
-                        color: offWhiteColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                    child: SizedBox(
+                      width: 190,
+                      child: Text(
+                        name,
+                        style: GoogleFonts.poppins(
+                          color: offWhiteColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
